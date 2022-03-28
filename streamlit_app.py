@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from st_aggrid import AgGrid, GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
-import streamlit_wordcloud as st_wordcloud
 from pywaffle import Waffle
 from matplotlib import pyplot as plt
 
