@@ -6,12 +6,30 @@ from pywaffle import Waffle
 from matplotlib import pyplot as plt
 
 
+st.set_page_config(
+     page_title="Social Drones in Education Analysis App",
+     page_icon="🧊",
+     layout="wide",
+     initial_sidebar_state="expanded",
+     menu_items={
+         'Get Help': 'https://www.extremelycoolapp.com/help',
+         'Report a bug': "https://www.extremelycoolapp.com/bug",
+         'About': "# This is a header. This is an *extremely* cool app!"
+     }
+ )
+
+
 header_container = st.container()
-wordcloud_container = st.container()
+
 dataset_container =  st.container()
+
 role_container = st.container()
 social_cues_input_container = st.container()
 social_cues_output_container = st.container()
+target_user_container = st.container()
+
+concerns_container = st.container()
+
 
 survey_df = pd.read_excel("miro_dataset.xlsx", sheet_name="Sheet1")
 #### TODO
@@ -83,7 +101,7 @@ with role_container:
         FigureClass=Waffle, 
         rows=5, 
         values=data, 
-        title={'label': 'role', 'loc': 'left'},
+        #title={'label': 'role', 'loc': 'left'},
         labels=["{0} ({1})".format(k, v) for k, v in data.items()],
         legend={'loc': 'lower left', 'bbox_to_anchor': (0, -1), 'ncol': 2, 'framealpha': 0}
     )
@@ -94,8 +112,8 @@ with role_container:
      count_table.index)
      
     verbatim_df = role_df[role_df['role'] == option]
-    verbatim_list = verbatim_df['Postit'].values
-    st.write(verbatim_list)
+    verbatim_list = verbatim_df[["ParticipantID",'Postit']]
+    st.dataframe(verbatim_list)
 
 with social_cues_input_container:
     st.header('Social Cues Input')
@@ -108,7 +126,7 @@ with social_cues_input_container:
         FigureClass=Waffle, 
         rows=5, 
         values=data, 
-        title={'label': 'Social cues - input', 'loc': 'left'},
+        #title={'label': 'Social cues - input', 'loc': 'left'},
         labels=["{0} ({1})".format(k, v) for k, v in data.items()],
         legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.5), 'ncol': 2, 'framealpha': 0}
     )
@@ -119,8 +137,66 @@ with social_cues_input_container:
      count_table.index)
      
     verbatim_df = role_df[role_df['Social cues - input'] == option]
-    verbatim_list = verbatim_df['Postit'].values
+    verbatim_list = verbatim_df[["ParticipantID",'Postit']]
     st.write(verbatim_list)
   
+
+with social_cues_output_container:
+    st.header('Social Cues Output')
+    role_df = survey_df[survey_df["Task"] == s_interaction_mode]
+    count_table = role_df['Social cues - output'].value_counts()
+    count_table = pd.DataFrame(count_table)
+    
+    data = count_table['Social cues - output']
+    fig = plt.figure(
+        FigureClass=Waffle, 
+        rows=3, 
+        values=data, 
+        #title={'label': 'Social cues - output', 'loc': 'left'},
+        labels=["{0} ({1})".format(k, v) for k, v in data.items()],
+        legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.5), 'ncol': 3, 'framealpha': 0}
+    )
+    st.pyplot(fig)
+
+    option = st.selectbox(
+     'Explore verbatim for each category',
+     count_table.index)
+     
+    verbatim_df = role_df[role_df['Social cues - output'] == option]
+    verbatim_list = verbatim_df[["ParticipantID",'Postit']]
+    st.dataframe(verbatim_list)
+
+
+with target_user_container:
+    st.header('Target User')
+    role_df = survey_df[survey_df["Task"] == s_interaction_mode]
+    count_table = role_df['Target User'].value_counts()
+    count_table = pd.DataFrame(count_table)
+    
+    data = count_table['Target User']
+    fig = plt.figure(
+        FigureClass=Waffle, 
+        rows=3, 
+        values=data, 
+        #title={'label': 'Social cues - output', 'loc': 'left'},
+        labels=["{0} ({1})".format(k, v) for k, v in data.items()],
+        legend={'loc': 'lower left', 'bbox_to_anchor': (0, -1), 'ncol': 3, 'framealpha': 0}
+    )
+    st.pyplot(fig)
+
+    option = st.selectbox(
+     'Explore verbatim for each category',
+     count_table.index)
+     
+    verbatim_df = role_df[role_df['Target User'] == option]
+    verbatim_list = verbatim_df[["ParticipantID",'Postit']]
+    st.dataframe(verbatim_list)
+
+
+with concerns_container:
+    st.header("Concerns")
+    verbatim_df = survey_df[survey_df['Concerns'] == "Yes"]
+    verbatim_list = verbatim_df[["ParticipantID",'Postit']]
+    st.dataframe(verbatim_list)
 
 st.write()
