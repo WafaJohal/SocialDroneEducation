@@ -107,7 +107,7 @@ with role_container:
      
     verbatim_df = role_df[role_df['role'] == option]
     verbatim_list = verbatim_df[["ParticipantID",'Postit']]
-    st.dataframe(verbatim_list)
+    st.write(verbatim_list)
 
 with social_cues_input_container:
     st.header('Social Cues Input')
@@ -158,7 +158,7 @@ with social_cues_output_container:
      
     verbatim_df = role_df[role_df['Social cues - output'] == option]
     verbatim_list = verbatim_df[["ParticipantID",'Postit']]
-    st.dataframe(verbatim_list)
+    st.write(verbatim_list)
 
 
 with target_user_container:
@@ -184,13 +184,13 @@ with target_user_container:
      
     verbatim_df = role_df[role_df['Target User'] == option]
     verbatim_list = verbatim_df[["ParticipantID",'Postit']]
-    st.dataframe(verbatim_list)
+    st.write(verbatim_list)
 
 
 with concerns_container:
     st.header("Concerns")
     verbatim_df = survey_df[survey_df['Concerns'] == "Yes"]
     verbatim_list = verbatim_df[["ParticipantID",'Postit']]
-    st.dataframe(verbatim_list)
+    st.write(verbatim_list)
 
 st.write()
