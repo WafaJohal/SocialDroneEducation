@@ -18,6 +18,7 @@ header_container = st.container()
 dataset_container =  st.container()
 
 role_container = st.container()
+task_container = st.container()
 social_cues_input_container = st.container()
 social_cues_output_container = st.container()
 target_user_container = st.container()
@@ -108,6 +109,31 @@ with role_container:
     verbatim_df = role_df[role_df['role'] == option]
     verbatim_list = verbatim_df[["ParticipantID",'Postit']]
     st.write(verbatim_list)
+
+with task_container:
+    st.header('Task Analysis')
+    role_df = survey_df[survey_df["Task"].isin([s_desired_role, s_interaction_mode])]
+    count_table = role_df.task.value_counts()
+    count_table = pd.DataFrame(count_table)
+    
+    data = count_table['task']
+    fig = plt.figure(
+        FigureClass=Waffle, 
+        rows=3, 
+        values=data, 
+        labels=["{0} ({1})".format(k, v) for k, v in data.items()],
+        legend={'loc': 'lower left', 'bbox_to_anchor': (0, 1), 'ncol': 3, 'framealpha': 0}
+    )
+    st.pyplot(fig)
+
+    option = st.selectbox(
+     'Explore verbatim for each category',
+     count_table.index)
+     
+    verbatim_df = role_df[role_df['task'] == option]
+    verbatim_list = verbatim_df[["ParticipantID",'Postit']]
+    st.write(verbatim_list)
+
 
 with social_cues_input_container:
     st.header('Social Cues Input')
