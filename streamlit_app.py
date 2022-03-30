@@ -70,7 +70,7 @@ def aggrid_interactive_table(df: pd.DataFrame):
 
 with header_container:
     st.title("Social Drone in Education Brainwriting Analysis")
-    st.text("""This webpage is meant to navigate and search the data collected via Miro in 6 workshops on about designing social drones for education
+    st.text("""This webpage is meant to navigate and search the data collected via Miro in 6 workshops on about designing social drones for education.
     """)
 
 
@@ -78,8 +78,12 @@ with header_container:
 with dataset_container:
     st.header('Loading the dataset')
   
-    selection = aggrid_interactive_table(df=survey_df)
-
+    no_eye_df = survey_df[survey_df["Task"] != s_eye_for]
+    no_eye_df = no_eye_df[no_eye_df["Task"] != s_eye_like]
+    
+    st.text("The interactive table below allows you to explore the " +str(len(no_eye_df)) + " sticky notes that were collected")
+    selection = aggrid_interactive_table(df=no_eye_df)
+    
     if selection:
         st.write("You selected:")
         st.json(selection["selected_rows"])
@@ -90,6 +94,7 @@ with role_container:
     role_df = survey_df[survey_df["Task"] == s_desired_role]
     count_table = role_df.role.value_counts()
     count_table = pd.DataFrame(count_table)
+    st.text(str(count_table.role.sum()) +  " sticky notes mentioned the role of the drone")
     
     data = count_table['role']
     fig = plt.figure(
@@ -103,7 +108,7 @@ with role_container:
     st.pyplot(fig)
 
     option = st.selectbox(
-     'Explore verbatim for each category',
+     'Explore the postits for each category',
      count_table.index)
      
     verbatim_df = role_df[role_df['role'] == option]
@@ -115,6 +120,8 @@ with task_container:
     role_df = survey_df[survey_df["Task"].isin([s_desired_role, s_interaction_mode])]
     count_table = role_df.task.value_counts()
     count_table = pd.DataFrame(count_table)
+    st.text(str(count_table.task.sum()) + " sticky notes mentioned the task of the social drone")
+
     
     data = count_table['task']
     fig = plt.figure(
@@ -127,7 +134,7 @@ with task_container:
     st.pyplot(fig)
 
     option = st.selectbox(
-     'Explore verbatim for each category',
+     'Explore the postits for each category',
      count_table.index)
      
     verbatim_df = role_df[role_df['task'] == option]
@@ -146,14 +153,13 @@ with social_cues_input_container:
         FigureClass=Waffle, 
         rows=5, 
         values=data, 
-        #title={'label': 'Social cues - input', 'loc': 'left'},
         labels=["{0} ({1})".format(k, v) for k, v in data.items()],
         legend={'loc': 'lower left', 'bbox_to_anchor': (0, -0.5), 'ncol': 2, 'framealpha': 0}
     )
     st.pyplot(fig)
 
     option = st.selectbox(
-     'Explore verbatim for each category',
+     'Explore the postits for each category',
      count_table.index)
      
     verbatim_df = role_df[role_df['Social cues - input'] == option]
@@ -179,7 +185,7 @@ with social_cues_output_container:
     st.pyplot(fig)
 
     option = st.selectbox(
-     'Explore verbatim for each category',
+     'Explore the postits for each category',
      count_table.index)
      
     verbatim_df = role_df[role_df['Social cues - output'] == option]
@@ -205,7 +211,7 @@ with target_user_container:
     st.pyplot(fig)
 
     option = st.selectbox(
-     'Explore verbatim for each category',
+     'Explore the postits for each category',
      count_table.index)
      
     verbatim_df = role_df[role_df['Target User'] == option]
